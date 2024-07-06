@@ -8,12 +8,17 @@ alocal availableGames = {
 }
 
 if availableGames[game.PlaceId] then
-    pcall(availablesGames[game.PlaceId]["Function"]) 
-  return
+  -- Using pcall to handle potential errors
+  local success, error = pcall(availableGames[game.PlaceId]["Function"])
+  if success then
+    -- Function executed without errors
+  else
+    warn("Error running function:", error) -- Log the error message
+  end
 else
-    game:GetService("StarterGui"):SetCore("SendNotification", {
+  game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Notification",
     Text = "Game Is Not Supported!",
     Duration = 5
-})
+  })
 end
