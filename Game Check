@@ -1,4 +1,4 @@
-local availableGames = {
+alocal availableGames = {
   [9791603388] = {
     ["Name"] = "Underground Wars 2.0",
     ["Function"] = function()
@@ -8,7 +8,7 @@ local availableGames = {
 }
 
 if availableGames[game.PlaceId] then
-    print(availableGames[game.PlaceId]["Name"])
+    availableGames[game.PlaceId]["Function"]
   return
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
