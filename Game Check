@@ -8,7 +8,7 @@ alocal availableGames = {
 }
 
 if availableGames[game.PlaceId] then
-    availableGames[game.PlaceId]["Function"]()
+    pcall(availablesGames[game.PlaceId]["Function"]) 
   return
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
