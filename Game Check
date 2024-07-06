@@ -1,10 +1,10 @@
 local Check = nil
 local gameCheck = game.PlaceId
 local availableGames = {
-  [9791603388] = "UnderGroundWars",
+  ["9791603388"] = "UnderGroundWars",
 }
 
-if gameCheck[availableGames] then
+if gameCheck[tonumber(availableGames)] then
     print(gameCheck[availableGames])
   return
 else
