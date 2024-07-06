@@ -2,7 +2,7 @@ local availableGames = {
   [9791603388] = {
     ["Name"] = "Underground Wars 2.0",
     ["Function"] = function()
-      --Script Here.
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/UnknownDev125/Scriptorium-Hub/main/Underground%20Wars%202.0"))()
     end
   }
 }
@@ -13,7 +13,7 @@ if availableGames[game.PlaceId] then
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Notification",
-    Text = "This Game Is Not Available!",
+    Text = "Game Is Not Supported!",
     Duration = 5
 })
 end
