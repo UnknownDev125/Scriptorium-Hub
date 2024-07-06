@@ -123,7 +123,8 @@ end)
 
 --Visuals Section
 
-Visuals:NewButton("Highlight Opposing Team", "Highlights Opposing Team.", function()
+Visuals:NewToggle("Highlight Opposing Team", "Highlights Opposing Team.", function(state)
+  while state do
   local Players = game:GetService("Players")
   local localPlayer = Players.LocalPlayer
   
@@ -182,6 +183,7 @@ Visuals:NewButton("Highlight Opposing Team", "Highlights Opposing Team.", functi
     end
     wait(1)
   end
+ end
 end)
 
 Visuals:NewButton("Highlight Blue Flag", "Highlights Blue's Flag.", function()
