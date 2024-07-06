@@ -1,1 +1,17 @@
+local Check = nil
+local gameCheck = game.PlaceId
+local availableGames = {
+  [9791603388] = "UnderGroundWars",
+}
+
+if gameCheck[availableGames] then
+    print(gameCheck[availableGames])
+  return
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Notification",
+    Text = "This Game Is Not Available!",
+    Duration = 5
+})
+end
 
