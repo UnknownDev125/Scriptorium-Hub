@@ -8,13 +8,7 @@ local availableGames = {
 }
 
 if availableGames[game.PlaceId] then
-  -- Using pcall to handle potential errors
-  local success, error = pcall(availableGames[game.PlaceId]["Function"])
-  if success then
-    -- Function executed without errors
-  else
-    warn("Error running function:", error) -- Log the error message
-  end
+  pcall(availableGames[game.PlaceId]["Function"]())
 else
   game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Notification",
