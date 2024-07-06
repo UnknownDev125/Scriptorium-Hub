@@ -1,11 +1,15 @@
 local Check = nil
-local gameCheck = game.PlaceId
 local availableGames = {
-  ["9791603388"] = "UnderGroundWars",
+  [9791603388] = {
+    ["name"] = "Underground Wars 2.0",
+    ["function"] = function()
+      --Script Here.
+    end
+  }
 }
 
-if gameCheck[tonumber(availableGames)] then
-    print(gameCheck[availableGames])
+if availableGames[game.PlaceId] then
+    print(availableGames[game.PlaceId])
   return
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -14,4 +18,3 @@ else
     Duration = 5
 })
 end
-
