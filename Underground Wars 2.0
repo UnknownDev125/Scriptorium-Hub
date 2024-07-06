@@ -1,0 +1,238 @@
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Notification",
+    Text = "Loading ScriptoriumHub.",
+    Duration = 2
+})
+
+wait(2)
+
+--Library/Window
+local Library = loadstring(game:HttpGet("https://pastebin.com/raw/RmLqTugH"))()
+local Window = Library.CreateLib("ScriptoriumHub | Underground Wars 2.0", colors)
+
+--Tabs/Sections
+
+local Combat = Window:NewTab("Combats")
+local Combats = Combat:NewSection("KillAura/Combat Stuffs")
+
+local Movement = Window:NewTab("Character")
+local Movements = Movement:NewSection("Character Movement")
+
+local Visual = Window:NewTab("Visuals")
+local Visuals = Visual:NewSection("Visuals")
+
+local GuiSettings = Window:NewTab("Library Settings")
+local Settings = GuiSettings:NewSection("Settings")
+
+--Variables
+local player = game.Players.LocalPlayer
+local playerName = player.Name
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character.Humanoid
+
+--Functions
+local function TpTool()
+  mouse = game.Players.LocalPlayer:GetMouse()
+  tool = Instance.new("Tool")
+  tool.RequiresHandle = false
+  tool.Name = "Click TP"
+  tool.Activated:connect(function()
+    local pos = mouse.Hit+Vector3.new(0,2.5,0)
+    pos = CFrame.new(pos.X,pos.Y,pos.Z)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+  end)
+  tool.Parent = game.Players.LocalPlayer.Backpack
+end
+
+--Combats Section
+
+Combats:NewButton("Bigger Sword","Test", function()
+  for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren()) do
+    if v:isA("Tool") then
+      local a = Instance.new("SelectionBox",v.Handle)
+      v.Handle.Massless = true
+      v.Handle.Transparency = 1
+      a.Adornee = v.Handle
+      v.Handle.Size = Vector3.new(30, 30 , 30)
+      local selectionBox = Instance.new("SelectionBox",v.Handle)
+      selectionBox.Adornee = v.Handle
+      selectionBox.Color3 = Color3.new(0, 0.313725, 0.47451)
+    end
+  end
+end)
+
+Combats:NewButton("Hitbox", "Expands Hitbox", function()
+  _G.HeadSize = 15
+  _G.Disabled = true
+  
+  game:GetService('RunService').RenderStepped:connect(function()
+    if _G.Disabled then
+      for i,v in next, game:GetService('Players'):GetPlayers() do
+        if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+          pcall(function()
+            v.Character.HumanoidRootPart.Size = Vector3.new(_G.HumanoidRootPart,_G.HumanoidRootPart,_G.HumanoidRootPart)
+            v.Character.HumanoidRootPart.Transparency = 0.7
+            v.Character.HumanoidRootPart.BrickColor = BrickColor.new("white")
+            v.Character.HumanoidRootPart.Material = "Neon"
+            v.Character.HumanoidRootPart.CanCollide = false
+          end)
+        end
+      end
+    end
+  end)
+end)
+
+Combats:NewToggle("TpTool", "Gives TP Tool", function(state)
+  if state then
+    TpTool()
+    humanoid.Died:Connect(function()
+      if game.Players.LocalPlayer.humanoid.Health < 0 then
+        wait(5)
+        TpTool()
+      end
+    end)
+  end
+end)
+
+Combats:NewToggle("AutoClicker", "Auto Kll" , function(state)
+  if state then
+    local toolRange = 23
+    local player = game:GetService("Players").LocalPlayer
+    
+    game:GetService("RunService").RenderStepped:Connect(function()
+      local p = game.Players:GetPlayers()
+      for i = 2, #p do local v = p[i].Character
+        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= toolRange then
+          local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+          if tool and tool:FindFirstChild("Handle") then
+            tool:Activate()
+            for i,v in next, v:GetChildren() do
+              if v:IsA("BasePart") then
+                firetouchinterest(tool.Handle,v,0)
+                firetouchinterest(tool.Handle,v,1)
+                else
+                  break 
+              end
+            end
+          end
+        end
+      end
+    end)
+  end
+end)
+
+--Visuals Section
+
+Visuals:NewButton("Highlight Opposing Team", "Highlights Opposing Team.", function()
+  local Players = game:GetService("Players")
+  local localPlayer = Players.LocalPlayer
+  
+  local function isOpposingTeam(player)
+    return player ~= localPlayer and player.TeamColor.Name ~= localPlayer.TeamColor.Name and player.Character
+  end
+  
+  local function createHighlight(player)
+    local highlight = Instance.new("Highlight")
+    highlight.Name = player.Name
+    highlight.FillColor = Color3.fromRGB(175, 25, 255)
+    highlight.DepthMode = "AlwaysOnTop"
+    highlight.FillTransparency = 0.5
+    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+    highlight.OutlineTransparency = 0
+    
+    local storage = game.CoreGui:FindFirstChild("Highlight_Storage")
+    if not storage then
+      storage = Instance.new("Folder")
+      storage.Name = "Highlight_Storage"
+      storage.Parent = game.CoreGui
+    end
+    
+    highlight.Parent = storage
+    
+    if player.Character then
+      highlight.Adornee = player.Character
+    end
+  end
+  
+  local function destroyHighlight(player)
+    local highlight = storage:FindFirstChild(player.Name)
+    if highlight then
+      highlight:Destroy()
+    end
+  end
+  
+  local connections = {}
+  
+  while true do
+    for _, player in ipairs(Players:GetPlayers()) do
+      if isOpposingTeam(player) then
+        if not connections[player] then
+          connections[player] = player.CharacterAdded:Connect(function()
+            createHighlight(player)
+          end)
+          createHighlight(player)
+        end
+        else
+          if connections[player] then
+            connections[player]:Disconnect()
+            destroyHighlight(player)
+            connections[player] = nil
+          end
+      end
+    end
+    wait(1)
+  end
+end)
+
+Visuals:NewButton("Highlight Blue Flag", "Highlights Blue's Flag.", function()
+  local flag = game.Workspace.Map.Blue.Flag
+  
+  local highlightColor = Color3.fromRGB(24, 219, 222)
+  local highlightName = "BlueChams"
+  local highlightDepthMode = "AlwaysOnTop"
+  local highlightFillTransparency = 0.5
+  local highlightOutlineColor = Color3.fromRGB(255, 0, 0)
+  local highlightOutlineTransparency = 0.5 
+  
+  for i,v in pairs(flag:GetChildren()) do
+    local highlight = Instance.new("Highlight")
+    highlight.Name = highlightName
+    highlight.FillColor = highlightColor
+    highlight.DepthMode = highlightDepthMode
+    highlight.FillTransparency = highlightFillTransparency
+    highlight.OutlineColor = highlightOutlineColor
+    highlight.OutlineTransparency = highlightOutlineTransparency
+    
+    local storage = game.CoreGui:FindFirstChild("Highlight_Storage")
+    if not storage then
+      storage = Instance.new("Folder")
+      storage.Name = "Highlight_Storage"
+      storage.Parent = game.CoreGui
+    end
+    
+    highlight.Parent = storage
+    
+    if flag then
+      highlight.Adornee = v
+    end
+  end
+end)
+
+--Characters Section
+
+Movements:NewButton("Teleport To Blue", "Teleport Near Blue's Base.", function()
+  game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(84.8041916, 3.39999938, 154.557892)
+  wait(1)
+  game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-55, 3.4000001, -226)
+end)
+
+Movements:NewButton("Teleport To Red", "Teleport Near Red's Base.", function()
+  wait(2)
+  game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(84.8041916, 3.39999938, 154.557892)
+end)
+
+--Settings
+
+Settings:NewKeybind("Keybind Set", "KeybindInfo", Enum.KeyCode.F, function()
+  Library:ToggleUI()
+end)
