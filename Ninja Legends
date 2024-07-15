@@ -17,10 +17,13 @@ local visualSection = visualTab:NewSection("Visuals")
 local ownPlayer = game:GetService("Players").LocalPlayer
 local hrp = ownPlayer.Character.HumanoidRootPart
 local islands = workspace.islandUnlockParts
-local maxVisible = game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible
 local islandsTable = {}
 for i,v in pairs(islands:GetChildren()) do
   table.insert(islandsTable, v.Name)
+end
+local trainingTable = {}
+for i,v in pairs(workspace.trainingAreaParts:GetChildren()) do
+  table.insert(trainingTable, v.trainingAreaGui.nameLabel.Text)
 end
 
 getgenv().autoSwing = false;
@@ -67,8 +70,8 @@ end)
 
 
 autoSection:NewToggle("Auto Sell 35x", "Self Explanatory...", function(state)
-   getgenv().autoSell = state;
-   if getgenv().autoSell then
+  getgenv().autoSell = state;
+  if getgenv().autoSell then
     while getgenv().autoSell do
       firetouchinterest(hrp, game:GetService("Workspace").sellAreaCircles.sellAreaCircle16.circleInner, 1)
       task.wait()
@@ -91,6 +94,37 @@ autoCollect:NewToggle("Auto Collect Coins.", "Pretty Self Explanatory.", functio
   end
 end)
 
+autoCollect:NewButton("Collect All Chest", "Collects All Available Chests.", function()
+  game:GetService("Workspace").mythicalChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").goldenChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").enchantedChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").magmaChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").legendsChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").eternalChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").saharaChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").thunderChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").ancientChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").midnightShadowChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").groupRewardsCircle["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace")["Daily Chest"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace")["wonderChest"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(0.25)
+game:GetService("Workspace").wonderChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+game:GetService("Workspace").midnightShadowChest["circleInner"].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+end)
+
 teleportSections:NewButton("Unlock All Islands", "Self Explanatory..", function()
   for _, v in pairs(islands:GetChildren()) do
     if v and hrp then
@@ -101,7 +135,7 @@ teleportSections:NewButton("Unlock All Islands", "Self Explanatory..", function(
 end)
 
 teleportSections:NewDropdown("Teleport to Islands.", "Teleport to selected island.", islandsTable, function(currentOption)
-  for _,v in pairs(islands:GetChildren()) do
+  for i,v in pairs(islands:GetChildren()) do
     if v.Name == currentOption then
       for _,v in pairs(v:GetChildren()) do
         if v:IsA("Part") then
@@ -112,6 +146,15 @@ teleportSections:NewDropdown("Teleport to Islands.", "Teleport to selected islan
   end
 end)
 
+teleportSections:NewDropdown("Teleport to Training Grounds.", "Teleport to selected Training Ground.", trainingTable, function(trainingOption)
+  for i,v in pairs(workspace.trainingAreaParts:GetChildren()) do
+    if v.trainingAreaGui.nameLabel.Text == trainingOption then
+        if v ~= nil and v:IsA("Part") then
+          hrp.CFrame = v.CFrame
+      end
+    end
+  end
+end)
 
 visualSection:NewButton("Remove Overlays", "Removes the annoying coins and ninjutsu pop up.", function()
   game:GetService("Players").LocalPlayer.PlayerGui.statEffectsGui.Enabled = not game:GetService("Players").LocalPlayer.PlayerGui.statEffectsGui.Enabled
