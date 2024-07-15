@@ -3,7 +3,13 @@ local availableGames = {
     ["Name"] = "Underground Wars 2.0",
     ["Function"] = function()
       loadstring(game:HttpGet("https://raw.githubusercontent.com/UnknownDev125/Scriptorium-Hub/main/Underground%20Wars%202.0"))()
-    end
+    end,
+  [3956818381] = {
+    ["Name"] = "Ninja Legends",
+    ["Function"] = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/UnknownDev125/Scriptorium-Hub/main/Ninja%20Legends"))()
+      end
+    }
   }
 }
 
