@@ -1,0 +1,118 @@
+--Library/Window
+local Library = loadstring(game:HttpGet("https://pastebin.com/raw/vff1bQ9F"))()
+local Window = Library.CreateLib("ScriptoriumHub | Ninja Legends", colors)
+
+--Tabs/Sections
+local autoTab = Window:NewTab("Auto Features")
+local autoSection = autoTab:NewSection("Auto Essentials")
+local autoCollect = autoTab:NewSection("Auto Collect/Teleport items")
+
+local teleportTab = Window:NewTab("Teleportations")
+local teleportSections = teleportTab:NewSection("Teleport To Anywhere")
+
+local visualTab = Window:NewTab("Visuals")
+local visualSection = visualTab:NewSection("Visuals")
+
+--Variables/Shortcuts
+local ownPlayer = game:GetService("Players").LocalPlayer
+local hrp = ownPlayer.Character.HumanoidRootPart
+local islands = workspace.islandUnlockParts
+local maxVisible = game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible
+local islandsTable = {}
+for i,v in pairs(islands:GetChildren()) do
+  table.insert(islandsTable, v.Name)
+end
+
+getgenv().autoSwing = false;
+getgenv().autoBuy = false;
+getgenv().autoSell = false;
+getgenv().autoRank = false;
+getgenv().autoSell = false;
+
+autoSection:NewToggle("Auto Swing", "Auto Swings For You.", function(state)
+  getgenv().autoSwing = state
+  while getgenv().autoSwing do
+    game.Players.LocalPlayer.ninjaEvent:FireServer("swingKatana")
+    task.wait()
+  end
+end)
+
+autoSection:NewToggle("Auto Buy Best Sword" , "Self Explanatory..", function(state)
+  getgenv().autoBuy = state
+  while getgenv().autoBuy do
+    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer("buyAllSwords", "Blazing Vortex Island")
+    task.wait()
+  end
+end)
+
+autoSection:NewToggle("Auto Buy Best Belts" , "Self Explanatory..", function(state)
+  getgenv().autoBuy = state
+  while getgenv().autoBuy do
+    game:GetService("Players").LocalPlayer.ninjaEvent:FireServer("buyAllBelts"  ,"Blazing Vortex Island")
+    task.wait()
+  end
+end)
+
+autoSection:NewToggle("Auto Buy Ranks", "Self Explanatory..", function(state)
+  getgenv().autoRank = state
+  while getgenv().autoRank do
+    local oh1 = "buyRank"
+    local oh2 = game:GetService("ReplicatedStorage").Ranks.Ground:GetChildren()
+    for i = 1,#oh2 do
+      game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i].Name)
+      task.wait()
+    end
+  end
+end)
+
+
+autoSection:NewToggle("Auto Sell 35x", "Self Explanatory...", function(state)
+   getgenv().autoSell = state;
+   if getgenv().autoSell then
+    while getgenv().autoSell do
+      firetouchinterest(hrp, game:GetService("Workspace").sellAreaCircles.sellAreaCircle16.circleInner, 1)
+      task.wait()
+      firetouchinterest(hrp, game:GetService("Workspace").sellAreaCircles.sellAreaCircle16.circleInner, 0)
+    end
+  end
+end)
+
+
+autoCollect:NewToggle("Auto Collect Coins.", "Pretty Self Explanatory.", function(state)
+  if state then
+    for _,v in pairs(workspace.spawnedCoins.Valley:GetChildren()) do
+      if v and hrp then 
+        while state do
+          firetouchintetest(hrp, v.touchinterest)
+          wait(0.25)
+        end
+      end
+    end
+  end
+end)
+
+teleportSections:NewButton("Unlock All Islands", "Self Explanatory..", function()
+  for _, v in pairs(islands:GetChildren()) do
+    if v and hrp then
+      hrp.CFrame = v.CFrame
+      wait(0.25)
+    end
+  end
+end)
+
+teleportSections:NewDropdown("Teleport to Islands.", "Teleport to selected island.", islandsTable, function(currentOption)
+  for _,v in pairs(islands:GetChildren()) do
+    if v.Name == currentOption then
+      for _,v in pairs(v:GetChildren()) do
+        if v:IsA("Part") then
+          hrp.CFrame = v.CFrame
+        end
+      end
+    end
+  end
+end)
+
+
+visualSection:NewButton("Remove Overlays", "Removes the annoying coins and ninjutsu pop up.", function()
+  game:GetService("Players").LocalPlayer.PlayerGui.statEffectsGui.Enabled = not game:GetService("Players").LocalPlayer.PlayerGui.statEffectsGui.Enabled
+end)
